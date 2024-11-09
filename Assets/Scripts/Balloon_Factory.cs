@@ -30,18 +30,21 @@ public class Balloon_Factory : AbsBalloonFactory
         {
             case BalloonType.Red:
                 balloon = Instantiate(redBalloonPrefab);
-                balloon.GetComponent<Balloon_Manager>().speed = 2f;
+                balloon.GetComponent<Balloon_Manager>().speed = 1f;
                 balloon.GetComponent<Balloon_Manager>().points = 10;
+                balloon.GetComponent<Balloon_Manager>().timePenalty = 15;
                 break;
             case BalloonType.Blue:
                 balloon = Instantiate(blueBalloonPrefab);
-                balloon.GetComponent<Balloon_Manager>().speed = 4f;
+                balloon.GetComponent<Balloon_Manager>().speed = 2f;
                 balloon.GetComponent<Balloon_Manager>().points = 20;
+                balloon.GetComponent<Balloon_Manager>().timePenalty = 10;
                 break;
             case BalloonType.Green:
                 balloon = Instantiate(greenBalloonPrefab);
-                balloon.GetComponent<Balloon_Manager>().speed = 6f;
+                balloon.GetComponent<Balloon_Manager>().speed = 4f;
                 balloon.GetComponent<Balloon_Manager>().points = 30;
+                balloon.GetComponent<Balloon_Manager>().timePenalty = 5;
                 break;
         }
 

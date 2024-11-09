@@ -102,7 +102,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  boundaryX: 20
+  points: 10
+  timePenalty: 5
+  cannon: {fileID: 0}
+  waveFrequency: 5
+  waveAmplitude: 1
+  zigzagFrequency: 4
+  zigzagAmplitude: 2
+  balloonpop: {fileID: 2994049833057877991, guid: bdafa105848a31d4b8915a64b96d5c98, type: 3}
 --- !u!61 &5981274340498079564
 BoxCollider2D:
   m_ObjectHideFlags: 0

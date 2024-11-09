@@ -7,6 +7,7 @@ public class Shooter : MonoBehaviour
     public LineRenderer lineRenderer;
 
     private bool isShooting;
+    private int consecutiveHits = 0; // To track consecutive hits
 
     // Audio
     public AudioSource shooterAudioSource;
@@ -31,56 +32,48 @@ public class Shooter : MonoBehaviour
 
     void ShootRaycast()
     {
-        // Use ScreenToWorldPoint for 2D
         Vector3 touchPosition = Input.mousePosition;
-        touchPosition.z = 10f; // Distance from the camera
+        touchPosition.z = 10f; 
         Vector3 worldPosition = mainCamera.ScreenToWorldPoint(touchPosition);
 
-        // Create a 2D ray
-        Ray2D ray = new Ray2D(worldPosition, Vector2.zero); // Direction is not important in 2D
+        Ray2D ray = new Ray2D(worldPosition, Vector2.zero); 
 
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, raycastDistance);
 
-         // Play shoot sound
         shooterAudioSource.PlayOneShot(shootSound); 
 
         if (hit.collider != null && hit.collider.CompareTag("Balloon"))
         {
-             // Get the points from the balloon
             int pointsToAdd = hit.collider.gameObject.GetComponent<Balloon_Manager>().points; 
 
-            // Add the points to the score
-            Score_Manager.Instance.AddScore(pointsToAdd);
+            // Pass true for consecutive hit
+            Score_Manager.Instance.AddScore(pointsToAdd, true); 
+            consecutiveHits++;
 
             hit.collider.gameObject.SetActive(false);
-            // Destroy(hit.collider.gameObject);
+            Instantiate(hit.collider.gameObject.GetComponent<Balloon_Manager>().balloonpop, hit.point, Quaternion.identity);
 
-
-             // Play balloon pop sound
             AudioSource.PlayClipAtPoint(balloonPopSound, hit.point);
 
-            // Show the raycast line in 2D
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, hit.point);
 
-             // Rotate the sprite towards the touch position
             Vector2 direction = hit.point - (Vector2)transform.position; 
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);   
-
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);  
         }
         else
         {
-            // If no hit, draw the line to max distance
+            // Pass false to indicate the streak is broken
+            Score_Manager.Instance.AddScore(0, false); 
+            consecutiveHits = 0; // Reset consecutive hits
+
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, worldPosition);
 
-
-             // Rotate towards the touch position even if no balloon is hit
             Vector2 direction = worldPosition - transform.position;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);   
-
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward); 
         }
     }
 }
